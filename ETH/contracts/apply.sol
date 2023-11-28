@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
+import "./org.sol"; 
 
-contract Apply {
+contract Apply is Organization {
     
     struct Request {
         uint startAt;
@@ -14,8 +15,7 @@ contract Apply {
 
     uint32 public activeRequests;
 
-
-    function doRequest (uint _docId) public {
+    function doRequest (uint _docId) public onlyOwnerOrEmployer(){
     // check if this person already applied
         Request memory req = Request(block.timestamp, _docId, false);
         requestList[msg.sender] = req;
@@ -25,9 +25,6 @@ contract Apply {
     function checkStatus()public view returns(bool){
         return requestList[msg.sender].completed;
     }
-
-// employers who work with requests
- address [] public employers;
 
     function approveReq(address _applicantAddr) public {
         // check if this is an employer
